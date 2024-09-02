@@ -9,6 +9,8 @@ import {
 } from "react-router-dom";
 import RecordView from './pages/RecordView';
 import PlayView from './pages/PlayView';
+import AudioAnalyzer from './component/AudioAnalyzer';
+import Timeline from './component/Timeline';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: '/play',
     element: <PlayView />
+  },
+  {
+    path: '/meyda',
+    element: <AudioAnalyzer />
   }
 ]);
 
