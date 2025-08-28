@@ -1,6 +1,7 @@
 // src/AudioAnalyzer.js
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import Meyda from 'meyda';
+import { useSelector } from 'react-redux';
 
 const AudioAnalyzer = forwardRef(({ onCallback }, ref) => {
   const [isDebug, setIsDebug] = useState(onCallback == null ? true : false)
@@ -13,23 +14,8 @@ const AudioAnalyzer = forwardRef(({ onCallback }, ref) => {
   const analyzerNodeRef = useRef(null);
   const meydaAnalyzerRef = useRef(null);
 
-  // useEffect(() => {
-  //   if (!audioContextRef.current) {
-  //     // initAudio();
-  //     // setIsInitialized(true)
-  //     buttonRef.current.click()
-  //   }
-
-
-  //   return () => {
-  //     if (meydaAnalyzerRef.current) {
-  //       meydaAnalyzerRef.current.stop();
-  //     }
-  //     if (audioContextRef.current) {
-  //       audioContextRef.current.close();
-  //     }
-  //   };
-  // }, []);
+  const player = useSelector(state => state.player.value)
+  const isPlaying = player.isPlaying
 
   const initAudio = async () => {
     console.log("creating new audio context")
@@ -37,6 +23,9 @@ const AudioAnalyzer = forwardRef(({ onCallback }, ref) => {
     // const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     // sourceNodeRef.current = audioContextRef.current.createMediaStreamSource(stream);
     const currentAudioFile = ref != null ? ref.current : audioFileRef.current
+    
+    if(sourceNodeRef.current != null) return
+
     sourceNodeRef.current = audioContextRef.current.createMediaElementSource(currentAudioFile);
     analyzerNodeRef.current = audioContextRef.current.createAnalyser();
 
@@ -60,12 +49,44 @@ const AudioAnalyzer = forwardRef(({ onCallback }, ref) => {
 
   };
 
+  if(isPlaying) {
+    if(isInitialized) return
+
+    // if(isInitialized == false) {
+      initAudio()
+      setIsInitialized(true)
+
+    // }
+  }
+
+  // useEffect(() => {
+  //   if (!audioContextRef.current) {
+  //     console.log("init audio analyzer")
+
+  //     initAudio();
+  //     setIsInitialized(true)
+  //     // buttonRef.current.click()
+  //   }
+
+
+  //   return () => {
+  //     if (meydaAnalyzerRef.current) {
+  //       meydaAnalyzerRef.current.stop();
+  //     }
+  //     if (audioContextRef.current) {
+  //       audioContextRef.current.close();
+  //     }
+  //   };
+  // }, []);
+
+  
+
   return (
     <div>
       {
 
         <>
-          <button
+          {/* <button
 
             ref={buttonRef}
             onClick={() => {
@@ -74,7 +95,7 @@ const AudioAnalyzer = forwardRef(({ onCallback }, ref) => {
               setIsInitialized(true)
             }}>
             Start Audio Analysis
-          </button>
+          </button> */}
           {
             ref == null
               ?
@@ -83,7 +104,7 @@ const AudioAnalyzer = forwardRef(({ onCallback }, ref) => {
                 controls
                 loop
                 id="audio"
-                hidden
+                className='hidden'
                 src="asset/tabla.mp3">
               </audio>
               : null

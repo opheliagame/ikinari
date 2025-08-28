@@ -1,47 +1,51 @@
-import { useEffect, useRef, useState } from 'react';
-import images from '../data/files.json'
+import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 
-function Frame({ index, beat, position }) {
+function Frame({ onClickPlay }) {
+  const player = useSelector((state) => state.player.value)
+  const timeline = player.timeline;
+  const sceneIndex = player.sceneIndex;
+  const isPlaying = player.isPlaying
+  
+  const scene = timeline[sceneIndex];
 
-  const [item, setItem] = useState(images[index])
-  const [descWords, setDescWords] = useState(item.descriptions.map(desc => desc.split(',')).flat(1))
-  // const item = images[index]
-  // const descWords = item.descriptions.map(desc => desc.split(',')).flat(1)
+  const filePath = scene != null ? scene.objectURL : null;
 
 
-  // const [isFinished, setIsFinished] = useState(false)
-    // const descWords = item ? item.descriptions.map(desc => desc.split(',')).flat(1) : []
-
-  useEffect(() => {
-    setItem(images[index])
-    setDescWords(images[index].descriptions.map(desc => desc.split(',')).flat(1))
-  }, [index])
+  // if (scene == undefined) {
+  //   return (
+  //     <div>
+  //       {/* TODO */}
+  //       nothing here
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="w-full h-full">
-
-      <div className="relative w-full h-full flex flex-col justify-center items-center bg-black" >
-        {(beat % 2 == 0) ?
-          <div className='w-full h-full bg-contain bg-center relative' style={{ backgroundImage: `url(${item.filePath})` }}>
-            <div className="absolute left-0 bottom-12 w-full">
+      <div className="relative w-full h-full flex flex-col justify-center items-center bg-black">
+        <div
+          className="w-full h-full bg-contain bg-center relative"
+          style={{ backgroundImage: `url(${filePath})` }}
+        >
+          <div className="absolute left-0 bottom-0 h-16 w-full bg-zinc-400 bg-opacity-50 text-zinc-200 flex flex-row justify-between items-center">
+            
+            <div className="h-full py-2 px-4">
+              <FontAwesomeIcon
+                icon={isPlaying ? faPause : faPlay}
+                className="h-full cursor-pointer"
+                onClick={onClickPlay}
+              />
             </div>
-
-            {/* TODO get rid of this button */}
-            {/* <div className='absolute right-0 top-0 cursor-pointer bg-black'>
-              <p className='text-white' onClick={() => setItem(null)}>X</p>
-            </div> */}
+            <div>right</div>
+      <span>timeline length {timeline.length} scene number {sceneIndex}</span>
 
           </div>
-          :
-          <div className='text-center text-8xl font-bold text-yellow-300'>
-            <p>{descWords[position] == "null" ? '' : descWords[position]}</p>
-          </div>
-        }
+        </div>
       </div>
     </div>
   );
-
-
 }
 
-export default Frame
+export default Frame;

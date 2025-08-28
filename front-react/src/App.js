@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
+import 'react-grid-layout/css/styles.css'
+import 'react-resizable/css/styles.css'
 import images from './data/files.json'
 import Frame from './component/Frame'
 

@@ -11,6 +11,8 @@ import RecordView from './pages/RecordView';
 import PlayView from './pages/PlayView';
 import AudioAnalyzer from './component/AudioAnalyzer';
 import Timeline from './component/Timeline';
+import {Provider} from 'react-redux'
+import store from './store' 
 
 const router = createBrowserRouter([
   {
@@ -34,7 +36,10 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+
+    </Provider>
   </React.StrictMode>
 );
 
